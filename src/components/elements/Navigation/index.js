@@ -18,7 +18,7 @@ const Navigation = ({ movie }) => {
 };
 
 Navigation.propTypes = {
-    movie: PropTypes.string.isRequired
+    movie: PropTypes.string
 };
 
 export default Navigation;

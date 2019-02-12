@@ -63,19 +63,21 @@ class Home extends Component {
         }
         this.fetchItems(endpoint);
     };
-    fetchItems = endpoint => {
-        fetch(endpoint)
-            .then(response => response.json())
-            .then(res => {
-                this.setState({
-                    currentPage: res.page,
-                    heroImage: this.state.heroImage || res.results[0],
-                    isLoading: false,
-                    movies: [...this.state.movies, ...res.results],
-                    totalPages: res.total_pages
-                });
-            })
-            .catch(error => console.error(error));
+    fetchItems = async endpoint => {
+        const { heroImage, movies } = this.state;
+        try {
+            const results = await (await fetch(endpoint)).json();
+
+            this.setState({
+                currentPage: results.page,
+                heroImage: heroImage || results.results[0],
+                isLoading: false,
+                movies: [...movies, ...results.results],
+                totalPages: results.total_pages
+            });
+        } catch (error) {
+            throw new Error(error);
+        }
     };
     render() {
         const {
