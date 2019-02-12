@@ -8,9 +8,9 @@ import Spinner from '../elements/Spinner';
 
 import './Home.css';
 
-const endpoint = `${process.env.REACT_APP_API_URL}movie/popular?api_key=${
-    process.env.REACT_APP_API_KEY
-}&language=en-US&page=1`;
+const popularEndpoint = `${
+    process.env.REACT_APP_API_URL
+}movie/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`;
 
 class Home extends Component {
     state = {
@@ -23,6 +23,23 @@ class Home extends Component {
     };
     componentDidMount = () => {
         this.setState({ isLoading: true });
+        this.fetchItems(popularEndpoint);
+    };
+    searchItems = searchTerm => {
+        let endpoint = '';
+        this.setState({
+            isLoading: true,
+            movies: [],
+            searchTerm
+        });
+
+        if (searchTerm === '') {
+            endpoint = popularEndpoint;
+        } else {
+            endpoint = `${process.env.REACT_APP_API_URL}search/movie?api_key=${
+                process.env.REACT_APP_API_KEY
+            }&language=en-US&query=${searchTerm}`;
+        }
         this.fetchItems(endpoint);
     };
     loadMoreItems = () => {
@@ -57,10 +74,21 @@ class Home extends Component {
             .catch(error => console.error(error));
     };
     render() {
+        const { heroImage } = this.state;
         return (
             <div className="rmdb-home">
-                <HeroImage />
-                <SearchBar />
+                {heroImage && (
+                    <div>
+                        <HeroImage
+                            image={`${process.env.REACT_APP_IMAGE_BASE_URL}${
+                                process.env.REACT_APP_BACKDROP_SIZE
+                            }${heroImage.backdrop_path}`}
+                            text={heroImage.overview}
+                            title={heroImage.original_title}
+                        />
+                        <SearchBar callback={this.searchItems} />
+                    </div>
+                )}
                 <FourColGrid />
                 <Spinner />
                 <LoadMoreBtn />
