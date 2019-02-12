@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import MovieApp from './components/MovieApp';
 import './index.css';
 
-ReactDOM.render(<p>START HERE</p>, document.getElementById('root'));
+render(<MovieApp />, document.getElementById('root'));
