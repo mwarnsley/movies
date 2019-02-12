@@ -9,6 +9,7 @@ import Spinner from '../elements/Spinner';
 import './Movie.css';
 
 import filter from 'lodash/filter';
+import map from 'lodash/map';
 
 class Movie extends Component {
     state = {
@@ -64,20 +65,39 @@ class Movie extends Component {
             .catch(error => console.error('Error fetching movie: ', error));
     };
     render() {
-        console.log(this.state);
+        const { actors, directors, isLoading, movie } = this.state;
+        const { location } = this.props;
         return (
             <div className="rmdb-movie">
-                <Navigation />
-                <MovieInfo />
-                <MovieInfoBar />
-
-                <Spinner />
+                {movie && (
+                    <div>
+                        <Navigation movie={location.movieName} />
+                        <MovieInfo directors={directors} movie={movie} />
+                        <MovieInfoBar
+                            budget={movie.budget}
+                            revenue={movie.revenue}
+                            time={movie.runtime}
+                        />
+                    </div>
+                )}
+                {actors && (
+                    <div className="rmdb-movie-grid">
+                        <FourColGrid header="Actors">
+                            {map(actors, (actor, i) => (
+                                <Actor actor={actor} key={i} />
+                            ))}
+                        </FourColGrid>
+                    </div>
+                )}
+                {!actors && !isLoading && <h1>No Movie Found!</h1>}
+                {isLoading && <Spinner />}
             </div>
         );
     }
 }
 
 Movie.propTypes = {
+    location: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired
 };
 

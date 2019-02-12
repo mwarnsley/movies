@@ -14,6 +14,8 @@ const popularEndpoint = `${
     process.env.REACT_APP_API_URL
 }movie/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`;
 
+const NoImageFound = '/images/no_image.jpg';
+
 class Home extends Component {
     state = {
         currentPage: 0,
@@ -116,7 +118,7 @@ class Home extends Component {
                                                   process.env
                                                       .REACT_APP_POSTER_SIZE
                                               }${movie.poster_path}`
-                                            : '../../images/no_image.jpg'
+                                            : NoImageFound
                                     }
                                     key={movie.id}
                                     movieId={movie.id}

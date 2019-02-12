@@ -3,10 +3,22 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './Navigation.css';
 
-const Navigation = () => {
-    return <div>NAVIGATION</div>;
+const Navigation = ({ movie }) => {
+    return (
+        <div className="rmdb-navigation">
+            <div className="rmdb-navigation-content">
+                <Link to="/">
+                    <p>Home</p>
+                </Link>
+                <p>/</p>
+                <p>{movie}</p>
+            </div>
+        </div>
+    );
 };
 
-Navigation.propTypes = {};
+Navigation.propTypes = {
+    movie: PropTypes.string.isRequired
+};
 
 export default Navigation;
