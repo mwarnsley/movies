@@ -8,6 +8,8 @@ import Spinner from '../elements/Spinner';
 
 import './Home.css';
 
+import map from 'lodash/map';
+
 const popularEndpoint = `${
     process.env.REACT_APP_API_URL
 }movie/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`;
@@ -55,7 +57,7 @@ class Home extends Component {
         } else {
             endpoint = `${process.env.REACT_APP_API_URL}search/movi?api_key=${
                 process.env.REACT_APP_API_KEY
-            }&language=en-US&query${searchTerm}&page=${currentPage + 1}`;
+            }&language=en-US&query=${searchTerm}&page=${currentPage + 1}`;
         }
         this.fetchItems(endpoint);
     };
@@ -68,13 +70,20 @@ class Home extends Component {
                     heroImage: this.state.heroImage || res.results[0],
                     isLoading: false,
                     movies: [...this.state.movies, ...res.results],
-                    totalPages: res.totalPages
+                    totalPages: res.total_pages
                 });
             })
             .catch(error => console.error(error));
     };
     render() {
-        const { heroImage } = this.state;
+        const {
+            currentPage,
+            heroImage,
+            isLoading,
+            movies,
+            searchTerm,
+            totalPages
+        } = this.state;
         return (
             <div className="rmdb-home">
                 {heroImage && (
@@ -89,9 +98,41 @@ class Home extends Component {
                         <SearchBar callback={this.searchItems} />
                     </div>
                 )}
-                <FourColGrid />
-                <Spinner />
-                <LoadMoreBtn />
+                <div className="rmdb-home-grid">
+                    <FourColGrid
+                        header={searchTerm ? 'Search Result' : 'Popular Movies'}
+                        isLoading={isLoading}
+                    >
+                        {map(movies, movie => {
+                            return (
+                                <MovieThumb
+                                    clickable
+                                    image={
+                                        movie.poster_path
+                                            ? `${
+                                                  process.env
+                                                      .REACT_APP_IMAGE_BASE_URL
+                                              }${
+                                                  process.env
+                                                      .REACT_APP_POSTER_SIZE
+                                              }${movie.poster_path}`
+                                            : '../../images/no_image.jpg'
+                                    }
+                                    key={movie.id}
+                                    movieId={movie.id}
+                                    movieName={movie.original_title}
+                                />
+                            );
+                        })}
+                    </FourColGrid>
+                    {isLoading && <Spinner />}
+                    {currentPage <= totalPages && !isLoading && (
+                        <LoadMoreBtn
+                            onClick={this.loadMoreItems}
+                            text="Load More"
+                        />
+                    )}
+                </div>
             </div>
         );
     }
