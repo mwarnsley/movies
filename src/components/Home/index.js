@@ -57,7 +57,7 @@ class Home extends Component {
                 process.env.REACT_APP_API_KEY
             }&language=en-US&page=${currentPage + 1}`;
         } else {
-            endpoint = `${process.env.REACT_APP_API_URL}search/movi?api_key=${
+            endpoint = `${process.env.REACT_APP_API_URL}search/movie?api_key=${
                 process.env.REACT_APP_API_KEY
             }&language=en-US&query=${searchTerm}&page=${currentPage + 1}`;
         }
